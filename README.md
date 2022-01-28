@@ -4,6 +4,7 @@ A collection of helpful components to build WordPress (Gutenberg) blocks with. C
 
 ## Upcoming Components
 
-- Single Term Selector
-- Relative DateTime selector
-- Block Status Indicator
+- [WIP] Single Term Selector
+- [WIP] Relative DateTime selector
+- [WIP] Block Status Indicator
+- [WIP] Toolbar Button Dropdown with corresponding Inspector Section
