@@ -1,13 +1,13 @@
 /**
  * External dependencies
  */
-import { find } from 'lodash';
+import { find } from "lodash";
 
 /**
  * WordPress dependencies
  */
-import { __, isRTL } from '@wordpress/i18n';
-import { DropdownMenu, ToolbarGroup } from '@wordpress/components';
+import { __, isRTL } from "@wordpress/i18n";
+import { ToolbarGroup } from "@wordpress/components";
 
 // const DEFAULT_LIST_CONTROLS = [
 // 	{
@@ -28,7 +28,7 @@ import { DropdownMenu, ToolbarGroup } from '@wordpress/components';
 // ];
 
 const POPOVER_PROPS = {
-	position: 'bottom right',
+	position: "bottom right",
 	isAlternate: true,
 };
 
@@ -36,11 +36,9 @@ function ButtonDropdownUI({
 	value,
 	onChange,
 	optionControls,
-	label = __('Button Dropdown'),
-	describedBy = __('A list of options to select from'),
+	title = __("Button Dropdown"),
+	describedBy = __("A list of options to select from"),
 	isCollapsed = true,
-	isToolbar = true,
-	isToolbarButton = true,
 	PopoverProps = POPOVER_PROPS,
 }) {
 	function applyOrUnset(currentOption) {
@@ -56,28 +54,40 @@ function ButtonDropdownUI({
 		if (activeSelection) return activeSelection.icon;
 	}
 
-	const UIComponent = isToolbar ? ToolbarGroup : DropdownMenu;
-	const extraProps = isToolbar ? { isCollapsed } : { isToolbarButton };
-
-	return (
-		<UIComponent
+	return "toolbar" === placement ? (
+		<ToolbarGroup
 			icon={setIcon()}
-			label={label}
-			toggleProps={{ describedBy }}
+			label={describedBy}
 			popoverProps={PopoverProps}
-			controls={listControls.map((control) => {
+			controls={optionControls.map((control) => {
 				const { currentOption } = control;
 				const isActive = value === currentOption;
 
 				return {
 					...control,
 					isActive,
-					role: isCollapsed ? 'menuitemradio' : undefined,
+					role: isCollapsed ? "menuitemradio" : undefined,
 					onClick: applyOrUnset(currentOption),
 				};
 			})}
-			{...extraProps}
 		/>
+	) : (
+		<fieldset className="block-editor-hooks__flex-layout-justification-controls">
+			<legend>{__(`${describedBy}`)}</legend>
+			<div>
+				{optionControls.map(({ icon, listStyle, title }) => {
+					return (
+						<Button
+							key={listStyle}
+							label={__(title)}
+							icon={icon}
+							isPressed={listStyle === value}
+							onClick={applyOrUnset(listStyle)}
+						/>
+					);
+				})}
+			</div>
+		</fieldset>
 	);
 }
 
